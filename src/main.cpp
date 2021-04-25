@@ -35,7 +35,7 @@ int main() {
 
   PID pid;
   /**
-   * TODO: Initialize the pid variable.
+   * TODO: Initialize the pid variable
    */
 
   h.onMessage([&pid](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, 
