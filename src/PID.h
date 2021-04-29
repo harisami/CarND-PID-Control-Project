@@ -4,6 +4,28 @@
 class PID {
  public:
   /**
+   * PID Errors
+   */
+  double p_error;
+  double i_error;
+  double d_error;
+
+  /**
+   * PID Coefficients
+   */ 
+  double Kp;
+  double Ki;
+  double Kd;
+  
+  // defining twiddle parameters
+  double tol; // tolerance
+  int n; // number of iterations
+  int max_n; // max number of iterations
+  double err;
+  double best_err;
+  double total_cte;
+  
+  /**
    * Constructor
    */
   PID();
@@ -30,21 +52,9 @@ class PID {
    * @output The total PID error
    */
   double TotalError();
-
- private:
-  /**
-   * PID Errors
-   */
-  double p_error;
-  double i_error;
-  double d_error;
-
-  /**
-   * PID Coefficients
-   */ 
-  double Kp;
-  double Ki;
-  double Kd;
+  
+  // update parameters (Kp, Ki, Kd)
+  void UpdateParams(double K, int i);
+  
 };
-
 #endif  // PID_H

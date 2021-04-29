@@ -8,6 +8,8 @@
 // for convenience
 using nlohmann::json;
 using std::string;
+using std::cout;
+using std::endl;
 
 // For converting back and forth between radians and degrees.
 constexpr double pi() { return M_PI; }
@@ -34,11 +36,22 @@ int main() {
   uWS::Hub h;
 
   PID pid;
+  
+  double p[3] = {0.1, 0.001, 1};
+  double dp[3] = {0.1, 0.0001, 0.1};
+    
   /**
-   * TODO: Initialize the pid variable
+   * TODO: Initialize the pid variable.
    */
+  
+//   double Kp_init = 0.2;
+//   double Ki_init = 0.001;
+//   double Kd_init = 4.5;
+  
+//   pid.Init(Kp_init, Ki_init, Kd_init);
+  pid.Init(p[0], p[1], p[2]);
 
-  h.onMessage([&pid](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, 
+  h.onMessage([&pid, &p, &dp](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, 
                      uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
@@ -54,9 +67,10 @@ int main() {
         if (event == "telemetry") {
           // j[1] is the data JSON object
           double cte = std::stod(j[1]["cte"].get<string>());
-          double speed = std::stod(j[1]["speed"].get<string>());
-          double angle = std::stod(j[1]["steering_angle"].get<string>());
+//           double speed = std::stod(j[1]["speed"].get<string>());
+//           double angle = std::stod(j[1]["steering_angle"].get<string>());
           double steer_value;
+          
           /**
            * TODO: Calculate steering value here, remember the steering value is
            *   [-1, 1].
@@ -64,13 +78,52 @@ int main() {
            *   Maybe use another PID controller to control the speed!
            */
           
+          pid.UpdateError(cte);
+          steer_value = pid.TotalError();
+          pid.n++; // adds to the number of iterations
+          
+          pid.total_cte += cte * cte;
+          
+          if (pid.n > pid.max_n) {
+            while ((dp[0]+dp[1]+dp[2]) > pid.tol) {
+              for (int i=0; i<3; ++i) {
+                p[i] += dp[i];
+                pid.UpdateParams(p[i], i); // update parameter
+                pid.err = pid.total_cte / pid.max_n;
+
+                if (pid.err < pid.best_err) {
+                  pid.best_err = pid.err;
+                  dp[i] *= 1.1;
+                }
+                else {
+                  p[i] -= 2*dp[i];
+                  pid.UpdateParams(p[i], i); // update parameter
+
+                  if (pid.err < pid.best_err) {
+                    pid.best_err = pid.err;
+                    dp[i] *= 1.1;
+                  }
+                  else {
+                    p[i] += dp[i];
+                    pid.UpdateParams(p[i], i); // update parameter
+                    dp[i] *= 0.9;
+                  }
+                }
+              }
+            }
+            pid.n = 0;
+          }
+          
           // DEBUG
+          if (steer_value > 1) {steer_value = 1;}
+          else if (steer_value < -1) {steer_value = -1;}
+          
           std::cout << "CTE: " << cte << " Steering Value: " << steer_value 
                     << std::endl;
 
           json msgJson;
           msgJson["steering_angle"] = steer_value;
-          msgJson["throttle"] = 0.3;
+          msgJson["throttle"] = 0.30;
           auto msg = "42[\"steer\"," + msgJson.dump() + "]";
           std::cout << msg << std::endl;
           ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
