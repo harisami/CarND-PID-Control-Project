@@ -5,7 +5,7 @@ Self-Driving Car Engineer Nanodegree Program
 
 [//]: # (Image Reference)
 
-[video1]: ./30mph.mov "30MPH video"
+[image1]: ./30mph.mov "30MPH video"
 [video2]: ./55mph.mov "55MPH video"
 
 ## Goal
@@ -30,7 +30,7 @@ The following final parameters were chosen after manual tuning and twiddle algor
 I was able to drive the car safely upto a speed of 57 MPH.
 
 Video: speed set at 30 MPH
-![alt text][video1]
+![alt text][image1]
 
 Video: speed set at 55 MPH
 ![alt text][video2]
