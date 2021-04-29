@@ -1,4 +1,4 @@
-# CarND-Controls-PID
+# CarND-PID-Control-Project
 Self-Driving Car Engineer Nanodegree Program
 
 ---
@@ -23,3 +23,14 @@ Keeping `Kp` (proportional component) zero caused the car to go very close to th
 `Ki` (integral component) became smoother when I brought it down close to zero, from 0.004 to 0.001, but at the expense of more swinging at the begining of each ride.
 
 `Kd` (differential component) being zero resulted in a lot of swinging left and right.
+
+The following final parameters were chosen after manual tuning and twiddle algorithm.
+`Kp:0.1, Ki:0.001, Kd:1`
+
+I was able to drive the car safely upto a speed of 57 MPH.
+
+Video: speed set at 30 MPH
+![alt text][video1]
+
+Video: speed set at 55 MPH
+![alt text][video2]
