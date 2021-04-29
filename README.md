@@ -3,6 +3,11 @@ Self-Driving Car Engineer Nanodegree Program
 
 ---
 
+[//]: # (Image Reference)
+
+[video1]: ./30mph.mov "30MPH video"
+[video2]: ./55mph.mov "55MPH video"
+
 ## Goal
 
 In this project you'll revisit the lake race track from the Behavioral Cloning Project. This time, however, you'll implement a PID controller in C++ to maneuver the vehicle around the track!
