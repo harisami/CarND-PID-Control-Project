@@ -25,7 +25,7 @@ Keeping `Kp` (proportional component) zero caused the car to go very close to th
 `Kd` (differential component) being zero resulted in a lot of swinging left and right.
 
 The following final parameters were chosen after manual tuning and twiddle algorithm.
-`Kp:0.1, Ki:0.001, Kd:1`
+`Kp:0.104, Ki:0.001, Kd:1.24`
 
 I was able to drive the car safely upto a speed of 57 MPH.
 
